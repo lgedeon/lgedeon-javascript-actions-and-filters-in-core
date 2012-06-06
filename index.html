@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+
+<!--
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+           
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+
+<html>
+	<head>
+		<title>There's a Function for That | Doing More for Less with Core Functions</title>
+
+		<meta charset='utf-8'>
+        <link href="fonts.css" type="text/css" rel="stylesheet" media="all">
+		<script src='slides.js'></script>
+	</head>
+
+<body style='display: none;'>
+
+	<section class='slides layout-regular template-default'>
+
+        <article>
+
+            <p><strong>Slides: tollmanz.com/wcsea</strong></p>
+
+            <h1>There's a Function for That: Doing More for Less With Core Functions</h1>
+
+            <p>
+                Zack Tollman, 10up LLC<br>
+                @tollmanz<br>
+                10up.com<br>
+                tollmanz.com
+            </p>
+
+        </article>
+
+        <article>
+
+            <h2>Gameplan</h2>
+
+            <p>Propaganda</p>
+            <p>Functions</p>
+            <ul>
+                <li>Function Definition</li>
+                <li>Real World Example</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h2>Propaganda</h2>
+
+            <p>Use Core Functions</p>
+            <ul>
+                <li>Less Overhead</li>
+                <li>More Stable</li>
+                <li>Easier to Read/Extend/Contribute To</li>
+            </ul>
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>select an option</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>selected</h3>
+
+            <h4>Purpose</h4>
+            <p>Add "selected" attribute to an option tag</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>$checked [mixed] value to match against $current</li>
+                <li>$current [mixed] value to match against $checked; default = (bool) true</li>
+                <li>$echo [bool] true to echo; false to return; default = (bool) true</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>[string] 'selected="selected"' or empty string</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h3>selected</h3>
+
+            <h4>Example</h4>
+
+            <p>Aaron Campbell - Twitter Widget Pro <a href="http://bluedogwebservices.com/wordpress-plugin/twitter-widget-pro/"><img src="images/link.png"></a></p>
+
+            <pre>// $instance['items'] = 6
+&lt;select name="<?php echo $this->get_field_name( 'items' ); ?>"&gt;
+&lt;?php
+    for ( $i = 1; $i <= 20; ++$i ) {
+        echo "&lt;option value='$i' ";
+        selected( $instance['items'], $i );
+        echo "&gt;$i&lt;/option&gt;";
+    }
+?&gt;
+&lt;/select&gt;</pre>
+            
+        <pre>&lt;option value='5'&gt;5&lt;/option&gt;
+&lt;option value='6' selected="selected"&gt;6&lt;/option&gt;
+&lt;option value='7'&gt;7&lt;/option&gt;</pre>
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>currently executing filter</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>current_filter</h3>
+
+            <h4>Purpose</h4>
+            <p>Determine the currently running filter within a callback function</p>
+
+			<h4>Args</h4>
+			<ul>
+				<li>none</li>
+			</ul>
+
+			<h4>Return</h4>
+			<ul>
+				<li>[string] name of the currently executing filter</li>
+			</ul>
+
+		</article>
+
+        <article>
+
+            <h3>current_filter</h3>
+
+			<h4>Example</h4>
+
+            <p>Alex Mills - Localtime <a href="http://wordpress.org/extend/plugins/localtime/"><img src="images/link.png"></a></p>
+
+            <pre>public function add_html( $string, $format ) {
+    switch ( current_filter() ) {
+        case 'get_the_date':
+        case 'get_comment_date':
+            $format = get_option( 'date_format' );
+            break;
+
+        case 'get_post_time':
+        case 'get_comment_time':
+            $format = get_option( 'time_format' );
+            break;
+
+        default;
+            return $string;
+    }
+}</pre>
+
+		</article>
+
+        <article>
+
+            <h3>current_filter</h3>
+
+			<h4>Example</h4>
+
+            <p>Michael Fields - Taxonomy Images <a href="https://github.com/mfields/Taxonomy-Images"><img src="images/link.png"></a></p>
+
+            <pre>function taxim_get_terms( $default, $args = array() ) {
+    $filter = 'taxim-get-terms';
+
+    if ( $filter !== current_filter() ) {
+        taxim_please_use_filter( __FUNCTION__, $filter );
+    }
+}</pre>
+
+		</article>
+
+        <article class="transition">
+            <p><blockquote>simpler times</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>human_time_diff</h3>
+
+            <h4>Purpose</h4>
+            <p>Display a human readable time difference</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>$from [int] start of interval</li>
+                <li>$to [int] end of interval; default = time()</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>[string] human readable difference between $from and $to</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h3>human_time_diff</h3>
+
+            <h4>Example</h4>
+
+            <p>Zack Tollman/Helen Hou-Sand&iacute; - Debug Bar Cron <a href="http://wordpress.org/extend/plugins/debug-bar-cron/"><img src="images/link.png"></a></p>
+
+            <pre>$time_next_cron = date( 'Y-m-d H:i:s', $unix_time_next_cron );
+$human_time_next_cron = human_time_diff( $unix_time_next_cron );
+
+echo '&lt;h2 class="times"&gt;&lt;span&gt;';
+echo '__( 'Next Event', 'zt-debug-bar-cron' ) . ':&lt;/span&gt;';
+echo $time_next_cron . '&lt;br /&gt;';
+echo $unix_time_next_cron . '&lt;br /&gt;';
+echo $human_time_next_cron . '&lt;/h2&gt;';</pre>
+
+            <img src="images/different-time-views.png" />
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>build a URL</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>add_query_arg</h3>
+
+            <h4>Purpose</h4>
+            <p>Append query variables and values to a URL</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>$args [array] query var/value pairs</li>
+                <li>$url [string] URL to append query vars to</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>[string] URL with query vars appended</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h3>add_query_arg</h3>
+
+            <h4>Example</h4>
+
+            <p>Pippin Williamson - Easy Digital Downloads <a href="http://easydigitaldownloads.com/"><img src="images/link.png"></a></p>
+
+            <pre>function edd_get_download_url( $key, $email, $filekey, $download ) {
+    $params = array(
+        'download_key' => $key,
+        'email' => urlencode( $email ),
+        'file' => $filekey,
+        'download' => $download,
+        'expire' => strtotime( '+1 day', time() )
+    );
+
+    $download_url = add_query_arg( $params, home_url() );
+    return $download_url;
+}</pre>
+
+        <p>http://site.com/?download_key=key&email=tollmanz@gmail.com...</p>
+            <!-- @todo: add example output -->
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>find a template</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>locate_template</h3>
+
+            <h4>Purpose</h4>
+            <p>Requires a template from either a child or parent theme's folder</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>$template_names [array|string] Template file(s) to search for</li>
+                <li>$load [bool] True to load template; false to just return path</li>
+                <li>$require_once [bool] True for require_once; false for require</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>[string] path to file</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h3>locate_template</h3>
+
+            <h4>Example</h4>
+
+            <p>Modern Tribe - The Events Calendar <a href="http://tri.be/wordpress-events-calendar/"><img src="images/link.png"></a></p>
+
+            <pre>public static function getTemplateHierarchy( $template ) {
+    $tribe_ecp = TribeEvents::instance();
+
+    $templates = array( 'events/' . $template );
+
+    if ( $theme_file = locate_template( $templates ) )
+        $file = $theme_file;
+    else
+        $file = $tribe_ecp->pluginPath . 'views/' . $template;
+
+    return apply_filters( 'tribe_events_template_' . $template, $file );
+}</pre>
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>feature specific code</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>require_if_theme_supports</h3>
+
+            <h4>Purpose</h4>
+
+            <p>Requires a file if the theme supports a specified feature</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>$feature [string] name of theme feature</li>
+                <li>$include [string] path to required file</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>void</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h3>require_if_theme_supports</h3>
+
+            <h4>Example</h4>
+
+            <p>Justin Tadlock - Theme Hybrid Framework <a href="http://themehybrid.com/"><img src="images/link.png"></a></p>
+
+            <pre>// In Parent
+function extensions() {
+    /* Load the Cleaner Caption extension if supported. */
+    require_if_theme_supports(
+        'cleaner-caption',
+        trailingslashit( HYBRID_EXTENSIONS ) . 'cleaner-caption.php'
+    );
+
+    /* Load the Entry Views extension if supported. */
+    require_if_theme_supports(
+        'entry-views',
+        trailingslashit( HYBRID_EXTENSIONS ) . 'entry-views.php'
+    );
+}
+
+// In Child
+add_theme_support( 'entry-views' );</pre>
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>identify objects</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>get_queried_object_id</h3>
+
+            <h4>Purpose</h4>
+
+            <p>Gets the ID for the current page's main object</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>none</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>[integer] ID of the current $wp_the_query object</li>
+            </ul>
+
+            <h4>Related</h4>
+            <ul>
+                <li>get_queried_object</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h3>get_queried_object_id</h3>
+
+            <h4>Example</h4>
+
+            <p>Thorsten Ott - Nav Menu Cache <a href="http://hitchhackerguide.com/2011/10/07/caching-wordpress-navigation-menus-wp_nav_menu-wrapper/"><img src="images/link.png"></a></p>
+
+            <pre>function hh_cached_nav_menu( $args = array(), $prime = false ) {
+    if ( get_queried_object_id() )
+        $qoi = get_queried_object_id();
+    else
+        $qoi = 0;
+
+    $nav_menu_key = md5( serialize( $args ) . '-' . $qoi );
+
+    if ( ! $nav_menu = get_transient( $nav_menu_key ) ) {
+        ob_start();
+        wp_nav_menu( $args );
+        $nav_menu = ob_get_clean();
+        set_transient( $nav_menu_key, $nav_menu );
+    }
+
+    return $nav_menu;
+}</pre>
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>use PHP in my JS</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>wp_localize_script</h3>
+
+            <h4>Purpose</h4>
+
+            <p>Writes a JSON encoded object for use with JS</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>$handle [string] name of script in which data is used</li>
+                <li>$object_name [string] name of resulting JS object</li>
+                <li>$l10n [array] array of data</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>void</li>
+            </ul>
+
+        </article>
+
+        <article>
+
+            <h3>wp_localize_script</h3>
+
+            <p>Mo Jangda - Zone Manager <a href="http://digitalize.ca/wordpress-plugins/zoninator/"><img src="images/link.png"></a></p>
+
+            <pre>function admin_enqueue_scripts() {
+    wp_enqueue_script( 'zon-js', URL . 'js/zoninator.js', ... );
+
+    $options = array(
+        'baseUrl' => $this->_get_zone_page_url(),
+        'adminUrl' => admin_url(),
+        ...
+        'zoneLockPeriod' => $this->zone_lock_period,
+        'zoneLockPeriodMax' => $this->zone_max_lock_period,
+    );
+    wp_localize_script( 'zon-js', 'zoninatorOptions', $options );
+}</pre>
+
+        </article>
+            
+        <article>
+
+            <h3>wp_localize_script</h3>
+
+            <pre>&lt;script type='text/javascript'&gt;
+/* &lt;![CDATA[ */
+var zoninatorOptions = {
+    "baseUrl":"http:\/\/site.com\/wp-admin\/admin.php?page=zoninator",
+    "adminUrl":"http:\/\/site.com\/wp-admin\/",
+    "ajaxNonceAction":"zone-nonce-ajax-action",
+    "errorGeneral":"Sorry, something went wrong! Please try again?",
+    "errorZoneLock":"Sorry, this zone is in use by another user and is currently locked. Please try again later.",
+    "errorZoneLockMax":"Sorry, you have reached the maximum idle limit and will now be redirected to the Dashboard.",
+    "zoneLockPeriod":"30",
+    "zoneLockPeriodMax":"600"
+};
+/* ]]&gt; */
+&lt;/script&gt;
+&lt;script type='text/javascript'
+src='http://site.com/wp-content/plugins/zoninator/js/zoninator.js?ver=0.2'&gt;&lt;/script&gt;</pre>
+
+        </article>
+
+        <article class="transition">
+            <p><blockquote>impress my friends</blockquote></p>
+        </article>
+
+        <article>
+
+            <h3>wp_list_pluck</h3>
+
+            <h4>Purpose</h4>
+            <p>Select a single index's value from a collection of similar objects/arrays</p>
+
+            <h4>Args</h4>
+            <ul>
+                <li>$list [object|array] A list of objects or arrays</li>
+                <li>$field [string|int] A field from $list to obtain</li>
+            </ul>
+
+            <h4>Return</h4>
+            <ul>
+                <li>[array] Single dimension array containing only the $field values from the child array|object within $list</li>
+            </ul>
+
+        </article>
+
+		<article>
+
+            <h3>wp_list_pluck</h3>
+
+			<h4>Example</h4>
+            <pre>
+$posts = get_posts();
+var_dump( $posts );</pre>
+
+		</article>
+
+		<article>
+
+            <h3>wp_list_pluck</h3>
+
+			<h4>Example</h4>
+            <pre>
+<b>array</b>
+  0 <font color="#888a85">=&gt;</font>
+    <b>object</b>(<i>stdClass</i>)[<i>81</i>]
+      <i>public</i> 'ID' <font color="#888a85">=&gt;</font> <small>int</small> <font color="#4e9a06">801</font>
+      <i>public</i> 'post_author' <font color="#888a85">=&gt;</font> <small>string</small> <font color="#cc0000">'1'</font> <i>(length=1)</i>
+      <i>public</i> 'post_date' <font color="#888a85">=&gt;</font> <small>string</small> <font color="#cc0000">'2012-05-04 17:40:12'</font> <i>(length=19)</i>
+        ...
+  1 <font color="#888a85">=&gt;</font>
+    <b>object</b>(<i>stdClass</i>)[<i>82</i>]
+      <i>public</i> 'ID' <font color="#888a85">=&gt;</font> <small>int</small> <font color="#4e9a06">797</font>
+      <i>public</i> 'post_author' <font color="#888a85">=&gt;</font> <small>string</small> <font color="#cc0000">'2'</font> <i>(length=1)</i>
+      <i>public</i> 'post_date' <font color="#888a85">=&gt;</font> <small>string</small> <font color="#cc0000">'2012-05-04 17:39:30'</font> <i>(length=19)</i>
+        ...
+  2 <font color="#888a85">=&gt;</font>
+    <b>object</b>(<i>stdClass</i>)[<i>83</i>]
+      <i>public</i> 'ID' <font color="#888a85">=&gt;</font> <small>int</small> <font color="#4e9a06">784</font>
+      <i>public</i> 'post_author' <font color="#888a85">=&gt;</font> <small>string</small> <font color="#cc0000">'1'</font> <i>(length=1)</i>
+      <i>public</i> 'post_date' <font color="#888a85">=&gt;</font> <small>string</small> <font color="#cc0000">'2012-04-29 01:22:08'</font> <i>(length=19)</i>
+        ...</pre>
+
+		</article>
+
+		<article>
+
+            <h3>wp_list_pluck</h3>
+
+			<h4>Example</h4>
+            <pre>
+$posts = get_posts();
+$ids = wp_list_pluck( $posts, 'ID' );
+var_dump( $ids );</pre>
+
+            <pre><b>array</b>
+  0 <font color="#888a85">=&gt;</font> <small>int</small> <font color="#4e9a06">801</font>
+  1 <font color="#888a85">=&gt;</font> <small>int</small> <font color="#4e9a06">797</font>
+  2 <font color="#888a85">=&gt;</font> <small>int</small> <font color="#4e9a06">784</font></pre>
+
+		</article>
+
+		<article>
+
+            <h3>wp_list_pluck</h3>
+
+			<h4>Example</h4>
+
+            <p>Kailey Lampert - Add New Default Avatar <a href="http://trepmal.com/plugins/add-new-default-avatar/"><img src="images/link.png"></a></p>
+
+            <pre>function upgrade() {
+    //upgrade option, we can now save multiple avatar options
+    $opts = get_option( 'kl_addnewdefaultavatar', false );
+
+    //get current default option
+    $current = get_option( 'avatar_default' );
+
+    //get any custom created avatars
+    $unavailable = wp_list_pluck( $opts, 'url' );
+
+    //if the current wasn't created by this plugin, update the backup
+    if ( ! in_array( $current, $unavailable ) )
+        update_option( 'pre_anda_avatar_default', $current );
+}</pre>
+
+		</article>
+
+        <article class="transition">
+            <p><blockquote>@!~& up my site</blockquote></p>
+            <p></p>
+        </article>
+
+        <article>
+            <h1>query_posts()</h1>
+            <p>When to Use WP_Query(), query_posts(), and pre_get_posts <a href="http://wordpress.stackexchange.com/questions/50761/when-to-use-wp-query-query-posts-and-pre-get-posts"><img src="images/link.png"></a></p>
+            <p>Querying Posts Without query_posts() <a href="http://developer.wordpress.com/tag/query_posts/"><img src="images/link.png"></a></p>
+        </article>
+
+        <article>
+            <h2>In Conclusion</h2>
+            <p>Use more Core functions</p>
+            <p>Read more Core</p>
+
+            <h3>Me</h3>
+            <p>Zack Tollman</p>
+            <p>@tollmanz</p>
+            <p>10up.com</p>
+            <p>tollmanz.com</p>
+        </article>
+
+	</section>
+
+</body>
+</html>
